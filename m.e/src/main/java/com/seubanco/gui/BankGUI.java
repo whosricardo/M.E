@@ -1,75 +1,79 @@
-    package com.seubanco.gui;
+package com.seubanco.gui;
 
-    import com.seubanco.model.Conta;
+import com.seubanco.model.Conta;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
-    import javafx.application.Application;
-    import javafx.geometry.Insets;
-    import javafx.geometry.Pos;
-    import javafx.scene.Scene;
-    import javafx.scene.control.*;
-    import javafx.scene.control.cell.PropertyValueFactory;
-    import javafx.scene.layout.BorderPane;
-    import javafx.scene.layout.GridPane;
-    import javafx.scene.layout.HBox;
-    import javafx.stage.Stage;
+public class BankGUI extends Application {
 
-    public class BankGUI extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Banco");
 
-        @Override
-        public void start(Stage primaryStage) {
-            primaryStage.setTitle("Banco");
+        // Criação do TabPane e das Tabs
+        TabPane tabPane = new TabPane();
 
-            // Table setup
-            TableView<Conta> table = new TableView<>();
-            TableColumn<Conta, String> column1 = new TableColumn<>("Titular");
-            column1.setCellValueFactory(new PropertyValueFactory<>("titular"));
+        Tab tabContas = new Tab("Contas", createContaContent());
+        tabContas.setClosable(false);
 
-            TableColumn<Conta, String> column2 = new TableColumn<>("Número");
-            column2.setCellValueFactory(new PropertyValueFactory<>("numero"));
+        Tab tabSegurosVida = new Tab("Seguros de Vida", createSeguroVidaContent());
+        tabSegurosVida.setClosable(false);
 
-            TableColumn<Conta, String> column3 = new TableColumn<>("Agência");
-            column3.setCellValueFactory(new PropertyValueFactory<>("agencia"));
+        Tab tabRelatorio = new Tab("Relatório", createRelatorioContent());
+        tabRelatorio.setClosable(false);
 
-            TableColumn<Conta, Double> column4 = new TableColumn<>("Saldo");
-            column4.setCellValueFactory(new PropertyValueFactory<>("saldo"));
+        tabPane.getTabs().addAll(tabContas, tabSegurosVida, tabRelatorio);
 
-            TableColumn<Conta, String> column5 = new TableColumn<>("Tipo");
-            column5.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        Scene scene = new Scene(tabPane, 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-            table.getColumns().add(column1);
-            table.getColumns().add(column2);
-            table.getColumns().add(column3);
-            table.getColumns().add(column4);
-            table.getColumns().add(column5);
+    private Node createContaContent() {
+        // Table setup
+        TableView<Conta> table = new TableView<>();
+        table.getColumns().addAll(createColumn("Titular", "titular"),
+                                  createColumn("Número", "numero"),
+                                  createColumn("Agência", "agencia"),
+                                  createColumn("Saldo", "saldo"),
+                                  createColumn("Tipo", "tipo"));
 
-            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+        // Buttons setup
+        Button btnNovaConta = new Button("Nova Conta");
+        btnNovaConta.setOnAction(e -> createContaForm());
 
-            // Buttons setup
-            Button btnNovaConta = new Button("Nova Conta");
-            Button btnSalvarDados = new Button("Salvar Dados");
+        Button btnSalvarDados = new Button("Salvar Dados");
+        // btnSalvarDados.setOnAction(e -> saveData());
 
-            // Layout setup
-            BorderPane pane = new BorderPane();
-            pane.setCenter(table);
+        // Button panel setup
+        HBox buttonPanel = new HBox(10, btnNovaConta, btnSalvarDados);
+        buttonPanel.setAlignment(Pos.CENTER);
+        buttonPanel.setPadding(new Insets(10));
 
-            HBox buttonPanel = new HBox(10);
-            buttonPanel.setAlignment(Pos.CENTER);
-            buttonPanel.setPadding(new Insets(10, 0, 10, 0));
-            buttonPanel.getChildren().addAll(btnNovaConta, btnSalvarDados);
+        // Layout setup
+        BorderPane pane = new BorderPane();
+        pane.setCenter(table);
+        pane.setBottom(buttonPanel);
 
-            pane.setBottom(buttonPanel);
+        return pane;
+    }
 
-            // Event handling
-            btnNovaConta.setOnAction(e -> createContaForm());
-            btnSalvarDados.setOnAction(e -> {
-                // Logic to save data
-            });
-
-            Scene scene = new Scene(pane, 600, 400);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        }
+    private TableColumn<Conta, String> createColumn(String title, String propertyName) {
+        TableColumn<Conta, String> column = new TableColumn<>(title);
+        column.setCellValueFactory(new PropertyValueFactory<>(propertyName));
+        return column;
+    }
 
         private void createContaForm() {
             Stage ContaStage = new Stage();
@@ -114,5 +118,17 @@
             Scene scene = new Scene(grid, 300, 275);
             ContaStage.setScene(scene);
             ContaStage.show();
+        }
+
+
+        
+        private Node createSeguroVidaContent() {
+            // Crie o conteúdo para a aba Seguros de Vida
+            return new Label("Conteúdo Seguro de Vida"); // Substitua com o conteúdo real
+        }
+        
+        private Node createRelatorioContent() {
+            // Crie o conteúdo para a aba Relatório
+            return new Label("Conteúdo Relatório"); // Substitua com o conteúdo real
         }
     }
