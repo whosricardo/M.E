@@ -119,8 +119,6 @@ public class BankGUI extends Application {
             ContaStage.setScene(scene);
             ContaStage.show();
         }
-
-
         
         private Node createSeguroVidaContent() {
             // Crie o conteúdo para a aba Seguros de Vida
